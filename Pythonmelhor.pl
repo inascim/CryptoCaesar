@@ -5,7 +5,8 @@ use strict;
 sub code{
     my ($mensagem, $senha, $tamanho) = @_;
     my @charsMensagem = split("", $mensagem);
-    my @charsSenha = split("", $senha);
+    my $lowerSenha= lc($senha);
+    my @charsSenha = split("", $lowerSenha);
     my $contador=0;
     foreach (@charsMensagem){
         my $i='a';
@@ -47,7 +48,7 @@ sub decode{
         if (/[a-zA-Z]/){
             while($i ne @charsSenha[$contador % $tamanho]){
 
-                for (my $j=0; $j<25; $j++){#HACK PARA FAZER DECREMENTO, JA QUE PERL NÃO CONSEGUE DECREMENTAR
+                for (my $j=0; $j<25; $j++){#HACK PARA FAZER DECREMENTO, JA QUE PERL NÃƒO CONSEGUE DECREMENTAR
                     ++$_;
                 }
                 ++$i;
@@ -59,7 +60,7 @@ sub decode{
         }
          elsif(/[0-9]/){
             while($k ne @charsSenha[$contador % $tamanho]){
-                for (my $j=0; $j<9; $j++){#HACK PARA FAZER DECREMENTO, JA QUE PERL NÃO CONSEGUE DECREMENTAR
+                for (my $j=0; $j<9; $j++){#HACK PARA FAZER DECREMENTO, JA QUE PERL NÃƒO CONSEGUE DECREMENTAR
                     ++$_;
                 }
                 ++$k;
