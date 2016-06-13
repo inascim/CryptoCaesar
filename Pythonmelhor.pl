@@ -10,9 +10,9 @@ sub code{
     my $contador=0;
     foreach (@charsMensagem){
         my $i='a';
-        my $k='0';
+        #my $k='0';
         #Expandir depois esse regex para incuir outros caracteres
-        if (/[a-zA-Z]/){
+        if (/[a-zA-Z0-9]/){
             while($i ne @charsSenha[$contador % $tamanho]){
                 ++$_;
                 ++$i;
@@ -22,16 +22,15 @@ sub code{
             $contador++;
             #print $_,"\n";
         }
-        elsif(/[0-9]/){
-            while($k ne @charsSenha[$contador % $tamanho]){
-                ++$_;
-                ++$k;
-            }
-            my @letra = split("",$_);
-            $_= $letra[-1];
-            $contador++;
-
-        }
+        #elsif(/[0-9]/){
+        #    while($k ne @charsSenha[$contador % $tamanho]){
+        #        ++$_;
+        #        ++$k;
+        #    }
+        #    my @letra = split("",$_);
+        #   $_= $letra[-1];
+        #    $contador++;
+        #}
     }
     return (@charsMensagem);
 }
@@ -43,11 +42,10 @@ sub decode{
     my $contador=0;
     foreach (@charsMensagem){
         my $i='a';
-        my $k='0';
+        #my $k='0';
         #Expandir depois esse regex para incuir outros caracteres
-        if (/[a-zA-Z]/){
+        if (/[a-zA-Z0-9]/){
             while($i ne @charsSenha[$contador % $tamanho]){
-
                 for (my $j=0; $j<25; $j++){#HACK PARA FAZER DECREMENTO, JA QUE PERL NÃO CONSEGUE DECREMENTAR
                     ++$_;
                 }
@@ -58,27 +56,27 @@ sub decode{
             $contador++;
             #print $_,"\n";
         }
-         elsif(/[0-9]/){
-            while($k ne @charsSenha[$contador % $tamanho]){
-                for (my $j=0; $j<9; $j++){#HACK PARA FAZER DECREMENTO, JA QUE PERL NÃO CONSEGUE DECREMENTAR
-                    ++$_;
-                }
-                ++$k;
-            }
-            my @letra = split("",$_);
-            $_= $letra[-1];
-            $contador++;
+        # elsif(/[0-9]/){
+        #    while($k ne @charsSenha[$contador % $tamanho]){
+        #        for (my $j=0; $j<9; $j++){#HACK PARA FAZER DECREMENTO, JA QUE PERL NÃO CONSEGUE DECREMENTAR
+        #            ++$_;
+        #        }
+        #        ++$k;
+        #    }
+        #    my @letra = split("",$_);
+        #    $_= $letra[-1];
+        #    $contador++;
 
-        }
+        #}
     }
     return (@charsMensagem);
 }
 #my @alfabeto=('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');
 #sfnjapm
 ##Eduardo asa
-my $m= "22222";
-my $s= "1";
-my $lenght= 1;
+my $m= "Eduardo";
+my $s= "asa";
+my $lenght= 3;
 #print code($m,$s, $lenght), "\n";
 print decode($m,$s, $lenght), "\n";
 
