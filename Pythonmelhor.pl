@@ -10,8 +10,6 @@ sub code{
     my $contador=0;
     foreach (@charsMensagem){
         my $i='a';
-        #my $k='0';
-        #Expandir depois esse regex para incuir outros caracteres
         if (/[a-zA-Z0-9]/){
             while($i ne @charsSenha[$contador % $tamanho]){
                 ++$_;
@@ -29,12 +27,11 @@ sub code{
 sub decode{
     my ($mensagem, $senha, $tamanho) = @_;
     my @charsMensagem = split("", $mensagem);
-    my @charsSenha = split("", $senha);
+    my $lowerSenha= lc($senha);
+    my @charsSenha = split("", $lowerSenha);
     my $contador=0;
     foreach (@charsMensagem){
         my $i='a';
-        #my $k='0';
-        #Expandir depois esse regex para incuir outros caracteres
         if (/[a-zA-Z0-9]/){
             while($i ne @charsSenha[$contador % $tamanho]){
                 for (my $j=0; $j<25; $j++){#HACK PARA FAZER DECREMENTO, JA QUE PERL NÃO CONSEGUE DECREMENTAR
@@ -51,7 +48,7 @@ sub decode{
     return (@charsMensagem);
 }
 #my @alfabeto=('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');
-#sfnjapm
+#sfnjapm =  code (abacaxi,senha,3);
 ##Eduardo asa 3
 my $m= "Eduardo999";
 my $s= "b";
