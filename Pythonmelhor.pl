@@ -78,9 +78,25 @@ sub decode{
 ##Eduardo asa 3
 
 ##Fevbsep234
+print "Bem vindo ao programa de cifra de Vigenere!";
+print "O que voce deseja fazer?";
+print "1- Criptografar";
+print "2- Descriptografar";
+print "Digite a opcao escolhida";
 
-my $m= "Fzgvewtw Tixl 38";
-my $s= "Miguel";
-my $lenght= 6;
-#print code($m,$s, $lenght), "\n";
-print decode($m,$s, $lenght), "\n";
+my $opcao=<>;
+while (($opcao!=1) || ($opcao!=2)){
+	print "Opcao invalida! Tente novamente!";
+	$opcao=<>;
+}
+print "Digite a mensagem:";
+my $m= <>;
+print "Digite a senha:";
+my $s= <>;
+my $lenght= length($s);
+if ($opcao==1){
+	print code($m,$s, $lenght), "\n";
+}
+if ($opcao==2){
+if print decode($m,$s, $lenght), "\n";
+}
