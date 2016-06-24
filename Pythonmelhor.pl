@@ -1,4 +1,4 @@
-#Trabalho de Linguagens de programação - 2016/1
+#Trabalho de Linguagens de programaçã#Trabalho de Linguagens de programação - 2016/1
 # Eduardo Naslausky
 # Igor Nascimento
 #Professor: Miguel
@@ -86,12 +86,15 @@ print "2- Descriptografar","\n";
 print "Digite a opcao escolhida","\n";
 
 	my $opcao=<>;
+	
 	while (($opcao!=1) && ($opcao!=2)){
 		print "Opcao invalida! Tente novamente!","\n";
 		$opcao=<>;
 	}
+	
 	print "Digite a mensagem:","\n";
 	my $m= <>;
+	
 	print "Digite a senha (só letras e espaço):","\n";
 	my $s= <>;
 	while (!($s=~ /^[a-zA-Z]+$/)){
@@ -100,12 +103,15 @@ print "Digite a opcao escolhida","\n";
 	}
 	my $lenght= length($s) - 1;
 	my $saida;
+	
 	if ($opcao==1){
 		print code($m,$s, $lenght), "\n";
 		$saida = code($m,$s, $lenght);
+		$saida = join("", code($m,$s, $lenght));
 		print "Descriptografando ...","\n";
 		print decode($saida,$s, $lenght), "\n";
 	}
+	
 	if ($opcao==2){
 		print decode($m,$s, $lenght), "\n";
 	}
