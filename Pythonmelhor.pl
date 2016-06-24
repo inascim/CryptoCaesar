@@ -1,4 +1,4 @@
-programaçã#Trabalho de Linguagens de programação - 2016/1
+#Trabalho de Linguagens de programação - 2016/1
 # Eduardo Naslausky
 # Igor Nascimento
 #Professor: Miguel
@@ -92,9 +92,12 @@ print "Digite a opcao escolhida","\n";
 	}
 	print "Digite a mensagem:","\n";
 	my $m= <>;
-	print "Digite a senha:","\n";
+	print "Digite a senha (só letras e espaço):","\n";
 	my $s= <>;
-	
+	while (!($s=~ /^[a-zA-Z]+$/)){
+		print "Apenas letras por favor! Tente novamente.", "\n";
+		$s= <>;
+	}
 	my $lenght= length($s) - 1;
 	my $saida;
 	if ($opcao==1){
