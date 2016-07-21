@@ -6,6 +6,11 @@
 #include <string>
 #include <fstream>
 #include "arquivo.h"
+
+
+#include "/usr/lib/perl5/core_perl/CORE/EXTERN.h"
+#include "/usr/lib/perl5/core_perl/CORE/perl.h"
+
 using namespace std;
 
 class mensagem: public arquivo {
@@ -14,6 +19,7 @@ class mensagem: public arquivo {
 		void criptografar(string);
 		void descriptografar(string);
 	private:
+		PerlInterpreter * my_perl; // O interpretador
 		//string lerLinha (int);
 };
 #endif
