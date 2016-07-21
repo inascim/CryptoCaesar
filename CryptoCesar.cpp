@@ -49,6 +49,8 @@ int main(int argc, char **argv, char **env)
 			cin >> senha;
 			myMsg.descriptografar(senha);
 		}
+		
 	}
 	return 0;
 }
+
