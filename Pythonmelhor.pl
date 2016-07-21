@@ -15,7 +15,7 @@ use menosmenos qw( menosmenosLetra menosmenosNum );
 
 
 sub code{
-    my ($mensagem, $senha, $tamanho) = @_;
+    my ($tamanho, $senha, $mensagem) = @_;
     my @charsMensagem = split("", $mensagem);
     my $lowerSenha= lc($senha);
     my @charsSenha = split("", $lowerSenha);
@@ -33,7 +33,8 @@ sub code{
             #print $_,"\n";
         }
     }
-    return (@charsMensagem);
+    my $string = join ( '', @charsMensagem );
+    return ($string);
 }
 
 
@@ -71,5 +72,6 @@ sub decode{
             $contador++;
 		}
     }
-    return (@charsMensagem);
+	my $string = join ( '', @charsMensagem );
+    return ($string);
 }

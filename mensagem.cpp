@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <string>
 #include "mensagem.h"
 #include <fstream>
@@ -46,27 +46,30 @@ void mensagem::criptografar (string senha)
     ArqInput.seekg(0, std::ios::beg);
     char *buffer = new char[tamanhoArquivo+1];
     ArqInput.read (buffer, tamanhoArquivo);
-	 //copiado do slide
-	 //parte propicia a dar erro
+	
+	const int len = senha.length();
+	const char * senha2 = senha.c_str();
+
+	//copiado do slide	
+	//parte propicia a dar erro
 	
 		dSP;
 		ENTER;
 		SAVETMPS;
 		PUSHMARK(SP);
+		XPUSHs (sv_2mortal(newSViv(len)));
+		XPUSHs (sv_2mortal(newSVpv(senha2,0)));		
 		XPUSHs (sv_2mortal(newSVpv(buffer,0)));
-		XPUSHs (sv_2mortal(newSVpv(senha.c_str(),0)));
-		XPUSHs (sv_2mortal(newSViv(senha.length())));
 		PUTBACK;
 		call_pv("code", G_SCALAR);
-		SPAGAIN;
-		
-		string resultado((char*)POPp);
+		SPAGAIN;		
+		string resultado(POPp);
 		PUTBACK;
 		FREETMPS;
 		LEAVE;
 	
-	cout << resultado <<endl;
-	
+	resultado.resize(tamanhoArquivo);
+	cout << "Estamos no cpp" << tamanhoArquivo << endl << resultado << endl;
 	
 	fechar("r");
 	fechar("w");

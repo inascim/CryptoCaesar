@@ -41,16 +41,6 @@ int main(int argc, char **argv, char **env)
 			cin >> senha;
 			myMsg.criptografar(senha);
 		}
-		if (opcaoMenu=="3"){
-			cout << "Digite o nome do arquivo" << endl;
-			cin >> nomedoArquivo;
-			mensagem myMsg(nomedoArquivo, argc, argv, env);
-			cout << "Digite a senha:" << endl;
-			cin >> senha;
-			myMsg.descriptografar(senha);
-		}
-		
 	}
 	return 0;
 }
-
