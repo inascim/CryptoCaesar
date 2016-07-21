@@ -9,10 +9,8 @@
 using namespace std;
 
 	mensagem::mensagem (string nome, int argc, char ** argv, char ** env):arquivo(nome){
-		string senha = "Abacaxi";
 	
 	char *meuArgv[] = { (char*)  "" , (char*) "Pythonmelhor.pl" };
-	PerlInterpreter * my_perl; // O interpretador
 	// inicialização
 	
 	PERL_SYS_INIT3 (&argc, &argv, &env);
@@ -27,8 +25,17 @@ using namespace std;
 	
 	perl_parse (my_perl, NULL, 2, meuArgv, (char **) NULL);
 	perl_run (my_perl);
-	
-	
+	}
+
+
+void mensagem::criptografar (string senha)
+{
+	//inicializa o interpretador perl
+	//
+	//fseek(f, 0, SEEK_END);
+	//long fsize = ftell(f);
+	//fseek(f, 0, SEEK_SET);
+
 	if (abrir("r")){
     abrir("w");
 
@@ -46,14 +53,14 @@ using namespace std;
 		ENTER;
 		SAVETMPS;
 		PUSHMARK(SP);
-		XPUSHs (sv_2mortal(newSViv(buffer)));
-		XPUSHs (sv_2mortal(newSViv(senha)));
+		XPUSHs (sv_2mortal(newSVpv(buffer,0)));
+		XPUSHs (sv_2mortal(newSVpv(senha.c_str(),0)));
 		XPUSHs (sv_2mortal(newSViv(senha.length())));
 		PUTBACK;
-		call_pv("expo", G_SCALAR);
+		call_pv("code", G_SCALAR);
 		SPAGAIN;
 		
-		string resultado = POPi;
+		string resultado((char*)POPp);
 		PUTBACK;
 		FREETMPS;
 		LEAVE;
@@ -64,4 +71,5 @@ using namespace std;
 	fechar("r");
 	fechar("w");
 	}
+	//Finaliza o interpretador de perl;
 }
