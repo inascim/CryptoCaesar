@@ -1,7 +1,7 @@
 
-CC='gcc'
+CC='g++'
 CCFLAGS=$(shell perl -MExtUtils::Embed -e ccopts)
-LD=$(shell perl -V::ld:)
+LD='g++'
 LDFLAGS=$(shell perl -MExtUtils::Embed -e ldopts)
 CRYPTOCESAROBJS= CryptoCesar.o arquivo.o dirtools.o mensagem.o
 EXECS= CryptoCesar
