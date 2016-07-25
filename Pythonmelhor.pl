@@ -39,7 +39,7 @@ sub code{
 
 
 sub decode{
-    my ($mensagem, $senha, $tamanho) = @_;
+    my ($tamanho, $senha, $mensagem) = @_;
     my @charsMensagem = split("", $mensagem);
     my $lowerSenha= lc($senha);
     my @charsSenha = split("", $lowerSenha);

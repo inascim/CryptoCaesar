@@ -28,13 +28,13 @@ int arquivo::abrir(string mode)
         }
 
 		if ((ArqInput.is_open())&&(mode=="r")){
-            cout << "Arquivo aberto para leitura com sucesso!"<<endl;
+            //cout << "Arquivo aberto para leitura com sucesso!"<<endl;
 			return 1;
 			}
 
 
 		if ((ArqOutput.is_open())&&(mode=="w")){
-            cout << "Arquivo aberto para escrita com sucesso!"<<endl;
+           // cout << "Arquivo aberto para escrita com sucesso!"<<endl;
 			return 1;
 			}
         cout<< "Falha ao abrir o arquivo: " << fileName << endl;

@@ -8,14 +8,15 @@
 #include "arquivo.h"
 
 
-#include "/usr/lib/perl5/core_perl/CORE/EXTERN.h"
-#include "/usr/lib/perl5/core_perl/CORE/perl.h"
+#include "EXTERN.h"
+#include "perl.h"
 
 using namespace std;
 
 class mensagem: public arquivo {
 	public:
 	    mensagem(string, int, char ** , char**);
+		~mensagem(void);
 		void criptografar(string);
 		void descriptografar(string);
 	private:

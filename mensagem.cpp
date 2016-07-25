@@ -3,29 +3,40 @@
 #include "mensagem.h"
 #include <fstream>
 
-#include "/usr/lib/perl5/core_perl/CORE/EXTERN.h"
-#include "/usr/lib/perl5/core_perl/CORE/perl.h"
+#include "EXTERN.h"
+#include "perl.h"
 
 using namespace std;
 
 	mensagem::mensagem (string nome, int argc, char ** argv, char ** env):arquivo(nome){
 	
-	char *meuArgv[] = { (char*)  "" , (char*) "Pythonmelhor.pl" };
-	// inicialização
-	
-	PERL_SYS_INIT3 (&argc, &argv, &env);
-	
-	// criação de um interpretador
-	
-	my_perl = perl_alloc();
-	perl_construct(my_perl);
-	PL_exit_flags |= PERL_EXIT_DESTRUCT_END;
-	
-	// invocação do perl com argumentos
-	
-	perl_parse (my_perl, NULL, 2, meuArgv, (char **) NULL);
-	perl_run (my_perl);
+		char *meuArgv[] = { (char*)  "" , (char*) "Pythonmelhor.pl" };
+		// inicialização
+		
+		PERL_SYS_INIT3 (&argc, &argv, &env);
+		
+		// criação de um interpretador
+		
+		my_perl = perl_alloc();
+		perl_construct(my_perl);
+		PL_exit_flags |= PERL_EXIT_DESTRUCT_END;
+		
+		// invocação do perl com argumentos
+		
+		perl_parse (my_perl, NULL, 2, meuArgv, (char **) NULL);
+		perl_run (my_perl);
 	}
+	
+	
+	
+	mensagem::~mensagem(void)
+{
+	// limpeza
+	perl_destruct(my_perl);
+	perl_free(my_perl);
+    // término
+	PERL_SYS_TERM();
+}
 
 
 void mensagem::criptografar (string senha)
@@ -37,42 +48,100 @@ void mensagem::criptografar (string senha)
 	//fseek(f, 0, SEEK_SET);
 
 	if (abrir("r")){
-    abrir("w");
+		abrir("w");
 
-    //char  *linhaAtual= new char [senha.length()+1];
+		//char  *linhaAtual= new char [senha.length()+1];
 
-    ArqInput.seekg(0, std::ios::end);
-    int tamanhoArquivo = ArqInput.tellg();
-    ArqInput.seekg(0, std::ios::beg);
-    char *buffer = new char[tamanhoArquivo+1];
-    ArqInput.read (buffer, tamanhoArquivo);
-	
-	const int len = senha.length();
-	const char * senha2 = senha.c_str();
+		ArqInput.seekg(0, std::ios::end);
+		int tamanhoArquivo = ArqInput.tellg();
+		ArqInput.seekg(0, std::ios::beg);
+		char *buffer = new char[tamanhoArquivo+1];
+		ArqInput.read (buffer, tamanhoArquivo);
+		
+		const int len = senha.length();
+		const char * senha2 = senha.c_str();
 
-	//copiado do slide	
-	//parte propicia a dar erro
-	
-		dSP;
-		ENTER;
-		SAVETMPS;
-		PUSHMARK(SP);
-		XPUSHs (sv_2mortal(newSViv(len)));
-		XPUSHs (sv_2mortal(newSVpv(senha2,0)));		
-		XPUSHs (sv_2mortal(newSVpv(buffer,0)));
-		PUTBACK;
-		call_pv("code", G_SCALAR);
-		SPAGAIN;		
-		string resultado(POPp);
-		PUTBACK;
-		FREETMPS;
-		LEAVE;
-	
-	resultado.resize(tamanhoArquivo);
-	cout << "Estamos no cpp" << tamanhoArquivo << endl << resultado << endl;
-	
-	fechar("r");
-	fechar("w");
+		//copiado do slide	
+		//parte propicia a dar erro
+		
+			dSP;
+			ENTER;
+			SAVETMPS;
+			PUSHMARK(SP);
+			XPUSHs (sv_2mortal(newSViv(len)));
+			XPUSHs (sv_2mortal(newSVpv(senha2,0)));		
+			XPUSHs (sv_2mortal(newSVpv(buffer,0)));
+			PUTBACK;
+			call_pv("code", G_SCALAR);
+			SPAGAIN;		
+			string resultado(POPp);
+			PUTBACK;
+			FREETMPS;
+			LEAVE;
+		
+		resultado.resize(tamanhoArquivo);
+		
+		ArqOutput<< resultado;
+		//cout<< "Criptografado com sucesso! Salvo arquivo criptografado em: output"<< fileName << endl;
+		
+		fechar("r");
+		fechar("w");
+	}
+	else {
+		cout << "Falha ao abrir o arquivo de mensagem! Tente novamente" << endl;
+	}
+	//Finaliza o interpretador de perl;
+}
+
+void mensagem::descriptografar (string senha)
+{
+	//
+	//fseek(f, 0, SEEK_END);
+	//long fsize = ftell(f);
+	//fseek(f, 0, SEEK_SET);
+
+	if (abrir("r")){
+		abrir("w");
+
+		//char  *linhaAtual= new char [senha.length()+1];
+
+		ArqInput.seekg(0, std::ios::end);
+		int tamanhoArquivo = ArqInput.tellg();
+		ArqInput.seekg(0, std::ios::beg);
+		char *buffer = new char[tamanhoArquivo+1];
+		ArqInput.read (buffer, tamanhoArquivo);
+		
+		const int len = senha.length();
+		const char * senha2 = senha.c_str();
+
+		//copiado do slide	
+		//parte propicia a dar erro
+		
+			dSP;
+			ENTER;
+			SAVETMPS;
+			PUSHMARK(SP);
+			XPUSHs (sv_2mortal(newSViv(len)));
+			XPUSHs (sv_2mortal(newSVpv(senha2,0)));		
+			XPUSHs (sv_2mortal(newSVpv(buffer,0)));
+			PUTBACK;
+			call_pv("decode", G_SCALAR);
+			SPAGAIN;		
+			string resultado(POPp);
+			PUTBACK;
+			FREETMPS;
+			LEAVE;
+		
+		resultado.resize(tamanhoArquivo);
+		
+		ArqOutput<< resultado;
+		//cout<< "Descriptografado com sucesso! Salvo arquivo descriptografado em: output"<< fileName << endl;
+		
+		fechar("r");
+		fechar("w");
+	}
+	else {
+		cout << "Falha ao abrir o arquivo! Tente novamente" << endl;
 	}
 	//Finaliza o interpretador de perl;
 }

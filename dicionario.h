@@ -9,9 +9,14 @@ using namespace std;
 
 class dicionario: public arquivo{
 	public:
-		vector <string>  verbetes();
+		dicionario (string);
+		int verificaMatch(string);
+		vector <string>  verbetes;
 		int numVerbetes;
+		int aberto;
+		
 	private:
+	
 
 };
 #endif
