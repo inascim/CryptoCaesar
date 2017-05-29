@@ -2,16 +2,24 @@
 #include <string>
 #include "mensagem.h"
 #include <fstream>
+#include "perlxsi.h"
 
-#include "EXTERN.h"
-#include "perl.h"
+
+#include "/usr/lib/x86_64-linux-gnu/perl/5.22/CORE/EXTERN.h"
+#include "/usr/lib/x86_64-linux-gnu/perl/5.22/CORE/perl.h"
+
+
+//#include "EXTERN.h"
+//#include "perl.h"
+
 
 using namespace std;
 
 	mensagem::mensagem (string nome, int argc, char ** argv, char ** env):arquivo(nome){
 	
-		char *meuArgv[] = { (char*)  "" , (char*) "Pythonmelhor.pl" };
+		char *meuArgv[] = { (char*)  "" , (char*) "RSA3.pl" };
 		// inicialização
+
 		
 		PERL_SYS_INIT3 (&argc, &argv, &env);
 		
@@ -23,7 +31,7 @@ using namespace std;
 		
 		// invocação do perl com argumentos
 		
-		perl_parse (my_perl, NULL, 2, meuArgv, (char **) NULL);
+		perl_parse (my_perl, xs_init, 2, meuArgv, (char **) NULL);
 		perl_run (my_perl);
 	}
 	
@@ -39,8 +47,9 @@ using namespace std;
 }
 
 
-void mensagem::criptografar (string senha)
+void mensagem::criptografar (int tamanhoChave)
 {
+	sizeKey = tamanhoChave;
 	//inicializa o interpretador perl
 	//
 	//fseek(f, 0, SEEK_END);
@@ -56,11 +65,13 @@ void mensagem::criptografar (string senha)
 		int tamanhoArquivo = ArqInput.tellg();
 		ArqInput.seekg(0, std::ios::beg);
 		char *buffer = new char[tamanhoArquivo+1];
+		//void *ponte  = new unsigned long long;
 		ArqInput.read (buffer, tamanhoArquivo);
 		
-		const int len = senha.length();
-		const char * senha2 = senha.c_str();
+		const char * arqName = fileName.c_str();	//possivel erro de string const	
 
+		const int tamanhoChave2 = sizeKey;
+		
 		//copiado do slide	
 		//parte propicia a dar erro
 		
@@ -68,20 +79,35 @@ void mensagem::criptografar (string senha)
 			ENTER;
 			SAVETMPS;
 			PUSHMARK(SP);
-			XPUSHs (sv_2mortal(newSViv(len)));
-			XPUSHs (sv_2mortal(newSVpv(senha2,0)));		
-			XPUSHs (sv_2mortal(newSVpv(buffer,0)));
+			XPUSHs (sv_2mortal(newSViv(tamanhoChave2)));
 			PUTBACK;
-			call_pv("code", G_SCALAR);
+			call_pv("KeysGen", G_SCALAR);
 			SPAGAIN;		
-			string resultado(POPp);
+			endHash = POPi;
 			PUTBACK;
 			FREETMPS;
 			LEAVE;
 		
-		resultado.resize(tamanhoArquivo);
+		//copiado do slide	
+		//parte propicia a dar erro
 		
-		ArqOutput<< resultado;
+
+			const int enderecoHash = endHash;
+
+//			dSP;
+			ENTER;
+			SAVETMPS;
+			PUSHMARK(SP);
+			XPUSHs (sv_2mortal(newSViv(enderecoHash)));
+			XPUSHs (sv_2mortal(newSVpv(arqName,0)));
+			PUTBACK;
+			call_pv("code", G_SCALAR);
+			SPAGAIN;		
+			string arqCode(POPp);
+			PUTBACK;
+			FREETMPS;
+			LEAVE;
+		
 		//cout<< "Criptografado com sucesso! Salvo arquivo criptografado em: output"<< fileName << endl;
 		
 		fechar("r");
@@ -93,7 +119,7 @@ void mensagem::criptografar (string senha)
 	//Finaliza o interpretador de perl;
 }
 
-void mensagem::descriptografar (string senha)
+void mensagem::descriptografar ()
 {
 	//
 	//fseek(f, 0, SEEK_END);
@@ -111,9 +137,10 @@ void mensagem::descriptografar (string senha)
 		char *buffer = new char[tamanhoArquivo+1];
 		ArqInput.read (buffer, tamanhoArquivo);
 		
-		const int len = senha.length();
-		const char * senha2 = senha.c_str();
+		const char * arqName = fileName.c_str();	//possivel erro de string const	
 
+		const int enderecoHash = endHash;
+		
 		//copiado do slide	
 		//parte propicia a dar erro
 		
@@ -121,20 +148,16 @@ void mensagem::descriptografar (string senha)
 			ENTER;
 			SAVETMPS;
 			PUSHMARK(SP);
-			XPUSHs (sv_2mortal(newSViv(len)));
-			XPUSHs (sv_2mortal(newSVpv(senha2,0)));		
-			XPUSHs (sv_2mortal(newSVpv(buffer,0)));
+			XPUSHs (sv_2mortal(newSViv(enderecoHash)));
+			XPUSHs (sv_2mortal(newSVpv(arqName,0)));
 			PUTBACK;
 			call_pv("decode", G_SCALAR);
 			SPAGAIN;		
-			string resultado(POPp);
+			string arqDecode(POPp);
 			PUTBACK;
 			FREETMPS;
 			LEAVE;
 		
-		resultado.resize(tamanhoArquivo);
-		
-		ArqOutput<< resultado;
 		//cout<< "Descriptografado com sucesso! Salvo arquivo descriptografado em: output"<< fileName << endl;
 		
 		fechar("r");
